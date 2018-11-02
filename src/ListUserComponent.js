@@ -13,7 +13,7 @@ const URL = 'https://jsonplaceholder.typicode.com/users';
 
 export default class ListUserComponent extends Component {
 
-    getData = async () => {
+    getData = async (url, method, body) => {
         // fetch(URL).then(res => {
         //     return res.json();
         // }).then(data => {
@@ -22,7 +22,10 @@ export default class ListUserComponent extends Component {
         //     throw error;
         // });
         try {
-            const response = await fetch(URL);
+            const response = await fetch(url, {
+                method,
+                body: JSON.stringify(body)
+            });
             const data = await response.json();
             this.setState({data});
         } catch (e) {
@@ -31,7 +34,13 @@ export default class ListUserComponent extends Component {
     };
 
     componentDidMount() {
-        this.getData();
+        this.getData(URL, 'GET');
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        const data = props.navigation.state.params;
+        console.log(data);
+        return {...props, ...state};
     }
 
     constructor(props) {
@@ -69,7 +78,16 @@ export default class ListUserComponent extends Component {
     }
 
     renderItem = ({item}) => {
-        return <UserItem item={item}/>
+        return <UserItem
+            item={item}
+            onItemClick={() => {
+                this.props.navigation.push('Detail', {item, callback: this.onNavigateBack})
+            }}
+        />
+    };
+
+    onNavigateBack = (data) => {
+        console.log(data);
     };
 
     keyExtractor = item => item.id.toString();
@@ -79,7 +97,6 @@ export default class ListUserComponent extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 40,
         alignItems: 'center',
         backgroundColor: '#dddddd'
     },

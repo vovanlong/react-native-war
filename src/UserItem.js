@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, Text } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  Text,
+  TouchableOpacity
+} from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
 export default class UserItem extends Component {
   render() {
-    const { item } = this.props;
+    const { item, onItemClick } = this.props;
     return (
-      <View
+      <TouchableOpacity
+        onPress={onItemClick}
         style={{
           flex: 1,
           width: width,
@@ -18,7 +25,7 @@ export default class UserItem extends Component {
         <View style={styles.container}>
           <Text style={styles.text_name}>{item.name}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }
